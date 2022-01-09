@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:id="@+id/fImage"
+                android:src="@drawable/index"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/fName"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="15dp"
+                android:layout_toEndOf="@id/fImage"
+                android:text="Apple"
+                android:textColor="#212121"
+                android:textSize="24dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/fDesc"
+                android:layout_alignStart="@id/fName"
+                android:layout_below="@id/fName"
+                android:text="red"
+                android:textStyle="normal|italic"
+                android:textSize="20dp"/>
+
+        </RelativeLayout>
+</RelativeLayout>
