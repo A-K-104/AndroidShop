@@ -1,7 +1,8 @@
 package com.example.androidshop;
-
 import androidx.annotation.NonNull;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import java.io.Serializable;
 
 public class Product implements Serializable {
@@ -15,6 +16,13 @@ public class Product implements Serializable {
         this.description = description;
         this.imageLink = imageLink;
         this.price = price;
+    }
+
+    public Product(JSONObject jsonObject) throws JSONException {
+        this.name = jsonObject.get("name").toString();
+        this.description = jsonObject.get("description").toString();
+        this.imageLink = jsonObject.get("image").toString();
+        this.price = tryParseInt(jsonObject.get("price").toString());
     }
 
     public String getName() {
@@ -49,14 +57,23 @@ public class Product implements Serializable {
         this.price = price;
     }
 
+    public Integer tryParseInt(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
     @NonNull
     @Override
     public String toString() {
-        return "{" +
-                "'name':'" + name + '\'' +
-                ", 'description':'" + description + '\'' +
-                ", 'imageLink':'" + imageLink + '\'' +
-                ", 'price':" + price +
+        return "Product{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", imageLink='" + imageLink + '\'' +
+                ", price=" + price +
                 '}';
     }
+
 }

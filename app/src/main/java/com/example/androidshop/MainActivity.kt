@@ -8,31 +8,35 @@ import android.view.ViewGroup
 import android.widget.*
 import com.squareup.picasso.Picasso
 import android.content.Intent
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.squareup.picasso.Callback
+import org.json.JSONArray
+import org.json.JSONObject
 import java.lang.Exception
 
 
 class MainActivity : AppCompatActivity() {
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val listView = findViewById<ListView>(R.id.listView)
+        val re: String = intent.getStringExtra("USER_CLASS") as String
 
-
-    val listView = findViewById<ListView>(R.id.listView)
-        val listOfProducts : MutableList<Product> = arrayListOf();
-        listOfProducts.add(Product("Apple","red",	"https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Bananas_white_background_DS.jpg/320px-Bananas_white_background_DS.jpg",0))
-        listOfProducts.add(Product("banana","yellow",	"https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Bananas_white_background_DS.jpg/320px-Bananas_white_background_DS.jpg",1))
-        listOfProducts.add(Product("ex","ex...",	"thumb.jpgground_DS.jpg",2))
-        val customAdapter = CustomAdapter(this,listOfProducts)
+        val listOfProducts = parseJson(re)
+        val customAdapter = CustomAdapter(this, listOfProducts)
         listView.adapter = customAdapter
 
         listView.setOnItemClickListener { _, _, i, _ ->
-            Toast.makeText(applicationContext, "Item Clicked"+customAdapter.listOfProducts[i].name,Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                applicationContext,
+                "Item Clicked" + customAdapter.listOfProducts[i].name,
+                Toast.LENGTH_SHORT
+            ).show()
             val intent = Intent(this@MainActivity, DetailsActivity::class.java)
             intent.putExtra("USER_CLASS", customAdapter.listOfProducts[i])
             startActivity(intent)
@@ -40,39 +44,56 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-class CustomAdapter(private val context: Activity, val listOfProducts:List<Product>):BaseAdapter(){
-    @SuppressLint("ViewHolder", "InflateParams")
-    override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
-        val inflater = context.layoutInflater
-        val view1 = inflater.inflate(R.layout.row_data,null)
 
-        val fName = view1.findViewById<TextView>(R.id.fName)
-        val fImage = view1.findViewById<ImageView>(R.id.fImage)
+    class CustomAdapter(private val context: Activity, val listOfProducts: ArrayList<Product>) :
+        BaseAdapter() {
+        @SuppressLint("ViewHolder", "InflateParams")
+        override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
+            val inflater = context.layoutInflater
+            val view1 = inflater.inflate(R.layout.row_data, null)
 
-        fName.text = listOfProducts[p0].name
-        Picasso.get().load(listOfProducts[p0].imageLink).into(fImage, object: Callback {
-            override fun onSuccess() {
-            }
+            val fName = view1.findViewById<TextView>(R.id.fName)
+            val fImage = view1.findViewById<ImageView>(R.id.fImage)
 
-            override fun onError(e: Exception?) {
-                Toast.makeText(context, "Error loading image: $e",Toast.LENGTH_SHORT).show()
-                fImage.setImageResource(R.drawable.error_image)
-            }
-        })
-        return view1
+            fName.text = listOfProducts[p0].name
+            Picasso.get().load(listOfProducts[p0].imageLink).into(fImage, object : Callback {
+                override fun onSuccess() {
+                }
+
+                override fun onError(e: Exception?) {
+                    Toast.makeText(context, "Error loading image: $e", Toast.LENGTH_SHORT).show()
+                    fImage.setImageResource(R.drawable.error_image)
+                }
+            })
+            return view1
+
+        }
+
+        override fun getItem(p0: Int): Any {
+            return listOfProducts
+        }
+
+        override fun getItemId(p0: Int): Long {
+            return listOfProducts[p0].name.hashCode().toLong()
+        }
+
+        override fun getCount(): Int {
+            return listOfProducts.size
+        }
+
 
     }
-    override fun getItem(p0: Int): Any {
-        return listOfProducts
+
+    private fun parseJson(response: String): ArrayList<Product> {
+        val productList: ArrayList<Product> = ArrayList()
+        val json = JSONObject(response)
+        val list = json.get("fruits") as JSONArray
+        for (i in 0 until list.length()) {
+            productList.add(
+                Product(list.getJSONObject(i))
+            )
+        }
+        return productList
     }
 
-    override fun getItemId(p0: Int): Long {
-        return listOfProducts[p0].name.hashCode().toLong()
-    }
-    override fun getCount(): Int {
-        return listOfProducts.size
-    }
-
-
-}
 }
