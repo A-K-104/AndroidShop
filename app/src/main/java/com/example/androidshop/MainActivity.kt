@@ -7,6 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.squareup.picasso.Picasso
+import android.content.Intent
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
+import com.squareup.picasso.Callback
+import java.lang.Exception
 
 
 class MainActivity : AppCompatActivity() {
@@ -17,16 +22,20 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-        val listView = findViewById<ListView>(R.id.listView)
+
+    val listView = findViewById<ListView>(R.id.listView)
         val listOfProducts : MutableList<Product> = arrayListOf();
         listOfProducts.add(Product("Apple","red",	"https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Bananas_white_background_DS.jpg/320px-Bananas_white_background_DS.jpg",0))
         listOfProducts.add(Product("banana","yellow",	"https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Bananas_white_background_DS.jpg/320px-Bananas_white_background_DS.jpg",1))
-        listOfProducts.add(Product("ex","ex...",	"https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Bananas_white_background_DS.jpg/320px-Bananas_white_background_DS.jpg",2))
+        listOfProducts.add(Product("ex","ex...",	"thumb.jpgground_DS.jpg",2))
         val customAdapter = CustomAdapter(this,listOfProducts)
         listView.adapter = customAdapter
 
         listView.setOnItemClickListener { _, _, i, _ ->
             Toast.makeText(applicationContext, "Item Clicked"+customAdapter.listOfProducts[i].name,Toast.LENGTH_SHORT).show()
+            val intent = Intent(this@MainActivity, DetailsActivity::class.java)
+            intent.putExtra("USER_CLASS", customAdapter.listOfProducts[i])
+            startActivity(intent)
         }
 
 
@@ -41,7 +50,15 @@ class CustomAdapter(private val context: Activity, val listOfProducts:List<Produ
         val fImage = view1.findViewById<ImageView>(R.id.fImage)
 
         fName.text = listOfProducts[p0].name
-        Picasso.get().load(listOfProducts[p0].imageLink).into(fImage)
+        Picasso.get().load(listOfProducts[p0].imageLink).into(fImage, object: Callback {
+            override fun onSuccess() {
+            }
+
+            override fun onError(e: Exception?) {
+                Toast.makeText(context, "Error loading image: $e",Toast.LENGTH_SHORT).show()
+                fImage.setImageResource(R.drawable.error_image)
+            }
+        })
         return view1
 
     }
