@@ -10,6 +10,7 @@ import android.widget.*
 import com.squareup.picasso.Picasso
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.squareup.picasso.Callback
 import org.json.JSONArray
@@ -26,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val listView = findViewById<ListView>(R.id.listView)
-        val re: String = intent.getStringExtra("USER_CLASS") as String
+        val re: String = intent.getStringExtra(Constance.IntentDataHeaders.PRODUCTS_JSON) as String
 
         val listOfProducts = parseJson(re)
         val customAdapter = CustomAdapter(this, listOfProducts)
@@ -34,7 +35,10 @@ class MainActivity : AppCompatActivity() {
 
         listView.setOnItemClickListener { _, _, i, _ ->
             val intent = Intent(this@MainActivity, DetailsActivity::class.java)
-            intent.putExtra("USER_CLASS", customAdapter.listOfProducts[i])
+            intent.putExtra(
+                Constance.IntentDataHeaders.PRODUCTS_JSON,
+                customAdapter.listOfProducts[i]
+            )
             startActivity(intent)
         }
     }
@@ -50,13 +54,24 @@ class MainActivity : AppCompatActivity() {
             val fImage = view1.findViewById<ImageView>(R.id.fImage)
 
             fName.text = listOfProducts[p0].name
-            Picasso.get().load(listOfProducts[p0].imageLink).resize(150, 100)
+            Picasso.get().load(listOfProducts[p0].imageLink).resize(
+                Constance.ImagesSizes.SMALL_IMAGE_BOX_WIDTH,
+                Constance.ImagesSizes.SMALL_IMAGE_BOX_HEIGHT
+            )
                 .into(fImage, object : Callback {
                     override fun onSuccess() {
                     }
 
                     override fun onError(e: Exception?) {
-                        Toast.makeText(context, "Error loading image: $e", Toast.LENGTH_SHORT)
+                        Log.d(
+                            this.javaClass.simpleName.toString(),
+                            "${Constance.LogMessages.ERROR_GET_IMAGE_URL} $e"
+                        )
+                        Toast.makeText(
+                            context,
+                            "${Constance.LogMessages.ERROR_GET_IMAGE_URL} $e",
+                            Toast.LENGTH_SHORT
+                        )
                             .show()
                         fImage.setImageResource(R.drawable.error_image)
                     }
@@ -81,7 +96,7 @@ class MainActivity : AppCompatActivity() {
     private fun parseJson(response: String): ArrayList<Product> {
         val productList: ArrayList<Product> = ArrayList()
         val json = JSONObject(response)
-        val list = json.get("fruits") as JSONArray
+        val list = json.get(Constance.JsonHeaders.DATA_MAIN_HEADER) as JSONArray
         for (i in 0 until list.length()) {
             productList.add(
                 Product(list.getJSONObject(i))

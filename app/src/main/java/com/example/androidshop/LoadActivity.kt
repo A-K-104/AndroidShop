@@ -14,27 +14,23 @@ class LoadActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_load)
-        val url = "https://dev-api.com/fruitsBT/getFruits"
-
-        sendGet(url)
+        sendGet(Constance.HTTP.BASE_URL)
 
     }
     private fun sendGet(url: String):ArrayList<Product> {
 
         val queue = Volley.newRequestQueue(this)
-
         val productList: ArrayList<Product> = ArrayList()
         val stringRequest = StringRequest(
             Request.Method.GET, url,
             { response ->
-                // Display the first 500 characters of the response string.
-
                 val intent = Intent(this, MainActivity::class.java)
-                intent.putExtra("USER_CLASS", response)
+                intent.putExtra(Constance.IntentDataHeaders.PRODUCTS_JSON, response)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
 
             },
-            { Log.d("req", "That didn't work!") })
+            { Log.d(this.javaClass.simpleName.toString(), Constance.LogMessages.ERROR_GET_URL) })
         queue.add(stringRequest)
         return productList
 

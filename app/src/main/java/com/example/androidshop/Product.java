@@ -12,6 +12,7 @@ public class Product implements Serializable {
     private int price;
 
     public Product(String name, String description, String imageLink, int price) {
+
         this.name = name;
         this.description = description;
         this.imageLink = imageLink;
@@ -19,10 +20,11 @@ public class Product implements Serializable {
     }
 
     public Product(JSONObject jsonObject) throws JSONException {
-        this.name = jsonObject.get("name").toString();
-        this.description = jsonObject.get("description").toString();
-        this.imageLink = jsonObject.get("image").toString();
-        this.price = tryParseInt(jsonObject.get("price").toString());
+
+        this.name = jsonObject.get(Constance.JsonHeaders.PRODUCT_NAME_HEADER).toString();
+        this.description = jsonObject.get(Constance.JsonHeaders.PRODUCT_DESCRIPTION_HEADER).toString();
+        this.imageLink = jsonObject.get(Constance.JsonHeaders.PRODUCT_IMAGE_LINK_HEADER).toString();
+        this.price = tryParseInt(jsonObject.get(Constance.JsonHeaders.PRODUCT_PRICE_HEADER).toString());
     }
 
     public String getName() {
