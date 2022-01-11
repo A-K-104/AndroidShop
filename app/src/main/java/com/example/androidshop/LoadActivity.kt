@@ -30,7 +30,11 @@ class LoadActivity : AppCompatActivity() {
                 startActivity(intent)
 
             },
-            { Log.d(this.javaClass.simpleName.toString(), Constance.LogMessages.ERROR_GET_URL) })
+            { Log.d(this.javaClass.simpleName.toString(), Constance.LogMessages.ERROR_GET_URL)
+                val intent = Intent(this, LoadActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+            })
         queue.add(stringRequest)
         return productList
 

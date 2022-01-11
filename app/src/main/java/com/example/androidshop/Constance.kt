@@ -28,4 +28,7 @@ class Constance {
         const val SMALL_IMAGE_BOX_WIDTH = 160
         const val SMALL_IMAGE_BOX_HEIGHT = 96
     }
+    object XmlString {
+        const val PRODUCT_PRICE= "Price:"
+    }
 }

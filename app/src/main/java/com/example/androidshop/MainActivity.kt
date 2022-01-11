@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
         BaseAdapter() {
         @SuppressLint("ViewHolder", "InflateParams")
         override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
+
             val inflater = context.layoutInflater
             val view1 = inflater.inflate(R.layout.row_data, null)
 
