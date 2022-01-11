@@ -11,8 +11,8 @@ class Constance {
     }
 
     object IntentDataHeaders {
-        const val PRODUCTS_JSON = "USER_CLASS"
-        const val SINGLE_PRODUCT = "USER_CLASS"
+        const val PRODUCTS_JSON = "products_json"
+        const val SINGLE_PRODUCT = "product_CLASS"
     }
 
     object JsonHeaders {

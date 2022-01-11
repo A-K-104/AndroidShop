@@ -17,7 +17,7 @@ class DetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_details)
 
         val g: Product =
-            intent.getSerializableExtra(Constance.IntentDataHeaders.PRODUCTS_JSON) as Product
+            intent.getSerializableExtra(Constance.IntentDataHeaders.SINGLE_PRODUCT) as Product
 
         val iv_product_icon = findViewById<ImageView>(R.id.iv_product_icon)
         val tName = findViewById<TextView>(R.id.tName)

@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         listView.setOnItemClickListener { _, _, i, _ ->
             val intent = Intent(this@MainActivity, DetailsActivity::class.java)
             intent.putExtra(
-                Constance.IntentDataHeaders.PRODUCTS_JSON,
+                Constance.IntentDataHeaders.SINGLE_PRODUCT,
                 customAdapter.listOfProducts[i]
             )
             startActivity(intent)
