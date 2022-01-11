@@ -1,4 +1,5 @@
 package com.example.androidshop
+
 import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
@@ -32,17 +33,10 @@ class MainActivity : AppCompatActivity() {
         listView.adapter = customAdapter
 
         listView.setOnItemClickListener { _, _, i, _ ->
-            Toast.makeText(
-                applicationContext,
-                "Item Clicked" + customAdapter.listOfProducts[i].name,
-                Toast.LENGTH_SHORT
-            ).show()
             val intent = Intent(this@MainActivity, DetailsActivity::class.java)
             intent.putExtra("USER_CLASS", customAdapter.listOfProducts[i])
             startActivity(intent)
         }
-
-
     }
 
     class CustomAdapter(private val context: Activity, val listOfProducts: ArrayList<Product>) :
@@ -56,15 +50,17 @@ class MainActivity : AppCompatActivity() {
             val fImage = view1.findViewById<ImageView>(R.id.fImage)
 
             fName.text = listOfProducts[p0].name
-            Picasso.get().load(listOfProducts[p0].imageLink).into(fImage, object : Callback {
-                override fun onSuccess() {
-                }
+            Picasso.get().load(listOfProducts[p0].imageLink).resize(150, 100)
+                .into(fImage, object : Callback {
+                    override fun onSuccess() {
+                    }
 
-                override fun onError(e: Exception?) {
-                    Toast.makeText(context, "Error loading image: $e", Toast.LENGTH_SHORT).show()
-                    fImage.setImageResource(R.drawable.error_image)
-                }
-            })
+                    override fun onError(e: Exception?) {
+                        Toast.makeText(context, "Error loading image: $e", Toast.LENGTH_SHORT)
+                            .show()
+                        fImage.setImageResource(R.drawable.error_image)
+                    }
+                })
             return view1
 
         }
@@ -80,8 +76,6 @@ class MainActivity : AppCompatActivity() {
         override fun getCount(): Int {
             return listOfProducts.size
         }
-
-
     }
 
     private fun parseJson(response: String): ArrayList<Product> {
