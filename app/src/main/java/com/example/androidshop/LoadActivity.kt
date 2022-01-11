@@ -9,6 +9,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONArray
 import org.json.JSONObject
+import kotlin.concurrent.timer
 
 class LoadActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,12 +32,15 @@ class LoadActivity : AppCompatActivity() {
 
             },
             { Log.d(this.javaClass.simpleName.toString(), Constance.LogMessages.ERROR_GET_URL)
+                Thread.sleep(Constance.HTTP.SLEEP_WHEN_FAILED.toLong())
                 val intent = Intent(this, LoadActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK) and
+                        Intent.FLAG_ACTIVITY_NO_ANIMATION
                 startActivity(intent)
             })
         queue.add(stringRequest)
         return productList
 
     }
+
 }

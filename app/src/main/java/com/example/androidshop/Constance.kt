@@ -8,6 +8,7 @@ class Constance {
 
     object HTTP {
         const val BASE_URL = "https://dev-api.com/fruitsBT/getFruits"
+        const val SLEEP_WHEN_FAILED = 3_000
     }
 
     object IntentDataHeaders {
@@ -28,7 +29,8 @@ class Constance {
         const val SMALL_IMAGE_BOX_WIDTH = 160
         const val SMALL_IMAGE_BOX_HEIGHT = 96
     }
+
     object XmlString {
-        const val PRODUCT_PRICE= "Price:"
+        const val PRODUCT_PRICE = "Price:"
     }
 }
